@@ -1,0 +1,59 @@
+*
+macro mkplot file='test'
+
+*macro/trace on
+
+m_tit = Flex Sample [file]
+title [m_tit]
+
+mes [file]
+
+opt nbox
+opt utit
+set hwid 5
+set fwid 5
+set bwid 5
+set pwid 5
+set gsiz 0.5
+set asiz 0.35
+set vsiz 0.3
+zone 1 2
+
+n/cre 30 'Flex' 4 ! ! num offset r x
+n/read 30 [file].dat ! ! ! -/N/(*)
+
+
+for/fil 2 [file].ps
+meta 2 -111
+
+v/cre no(600) r 600*0.0
+v/cre offs(600) r 600*0.0
+v/cre m_r(600) r 600*0.0
+v/cre m_x(600) r 600*0.0
+
+v/read no,offs,m_r,m_x [file].dat ! ! -/N/(*)
+
+1d 33 'Flex' 50 0 150
+
+set mtyp 20
+*null 0 150 0 100
+
+do i=1, 600
+if m_r([i]).gt.200 then
+  vec/input m_r([i]) -1
+endif
+enddo
+
+n/proj 33 30.r
+h/pl 33
+*n/pl 30.r r<200 ! ! ! s
+atit 'Ohm' 'No. of Channels'
+
+null 0.01 550 -5 200
+atit 'Channel No.' 'Ohm'
+*graph 550 no m_r 'CP'
+graph 550 no m_r 'P'
+
+
+close 0
+
